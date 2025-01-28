@@ -33,6 +33,19 @@ class Ui_MainWindow_Ex(QMainWindow, Ui_MainWindow):  # 1.继承ui_to_py 中Ui_Fo
         palette.setBrush(QPalette.Background, QtGui.QBrush(QtGui.QPixmap('img/bg2.png')))  # 设置背景图片
         self.widget_query.setPalette(palette)  # 为控件设置对应的调色板即可
 
+        # 开启自动填充背景
+        self.widget_checkBox.setAutoFillBackground(True)
+        palette = QPalette()  # 调色板类
+        palette.setBrush(QPalette.Background, QtGui.QBrush(QtGui.QPixmap('img/bg3.png')))  # 设置背景图片
+        self.widget_checkBox.setPalette(palette)  # 设置调色板控件对应的方法即可
+
+        # 通过label控件显示火车信息图片
+        self.label_train_img = QtWidgets.QLabel(self.centralwidget)
+        self.label_train_img.setGeometry(QtCore.QRect(0, 256, 960, 62))
+        self.label_train_img.setObjectName("label_train_img")
+        train_img = QPixmap('img/bg4.png')  # 打开火车信息位图
+        self.label_train_img.setPixmap(train_img)  # 设置调色板
+
         self.model = QStandardItemModel();  # 创建存储数据的模式
         # 根据空间自动改变列宽度并且不可修改列宽度
         self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
