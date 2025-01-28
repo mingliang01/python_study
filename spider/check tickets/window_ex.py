@@ -8,14 +8,50 @@
 
 from window import *
 from PyQt5.QtWidgets import *
+import sys
+import time
+from PyQt5.QtCore import Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette, QPixmap, QColor
+from PyQt5.QtGui import *
+from query_request import *
 
-class Ui_MainWindow_Ex(QWidget, Ui_MainWindow):  # 1.继承ui_to_py 中Ui_Form类
+class Ui_MainWindow_Ex(QMainWindow, Ui_MainWindow):  # 1.继承ui_to_py 中Ui_Form类
     def __init__(self):
         super().__init__()
         self.setupUi(self)  # 2.在这里调用Ui_Form.setupUi 并且需要传入self
         self.iniUI()
 
     def iniUI(self):
+        title_img = QPixmap('img/bg1.png')  # 打开顶部位图
+        self.label_title_img.setPixmap(title_img)  # 设置调色板
+
+        # 开启自动填充背景
+        self.widget_query.setAutoFillBackground(True)
+        palette = QPalette()  # 调色板类
+        palette.setBrush(QPalette.Background, QtGui.QBrush(QtGui.QPixmap('img/bg2.png')))  # 设置背景图片
+        self.widget_query.setPalette(palette)  # 为控件设置对应的调色板即可
+
+        self.model = QStandardItemModel();  # 创建存储数据的模式
+        # 根据空间自动改变列宽度并且不可修改列宽度
+        self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # 设置表头不可见
+        self.tableView.horizontalHeader().setVisible(False)
+        # 纵向表头不可见
+        self.tableView.verticalHeader().setVisible(False)
+        # 设置表格内容文字大小
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.tableView.setFont(font)
+        # 设置表格内容不可编辑
+        self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # 垂直滚动条始终开启
+        self.tableView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
+        _translate = QtCore.QCoreApplication.translate
+        self.setWindowTitle(_translate("MainWindow", "快手查票"))
+
         self.textEdit_3.setText(get_time())  # 出发日显示当天日期
         self.pushButton.clicked.connect(self.on_click)  # 查询按钮指定单击事件的方法
         self.checkBox_G.stateChanged.connect(self.change_G)  # 高铁选中与取消事件
@@ -177,11 +213,10 @@ def is_valid_date(str):
 
 
 def show_MainWindow():
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QtWidgets.QApplication(sys.argv)  # 首先必须实例化QApplication类，作为GUI主程序入口
-    MainWindow = QtWidgets.QMainWindow()  # 实例化QtWidgets.QMainWindow类，创建自带menu的窗体类型QMainWindow
-    ui = Ui_MainWindow()  # 实例UI类
-    ui.setupUi(MainWindow)  # 设置窗体UI
-    MainWindow.show()  # 显示窗体
+    ui = Ui_MainWindow_Ex()
+    ui.show()
     sys.exit(app.exec_())  # 当来自操作系统的分发事件指派调用窗口时，
     # 应用程序开启主循环（mainloop）过程，
     # 当窗口创建完成，需要结束主循环过程，
