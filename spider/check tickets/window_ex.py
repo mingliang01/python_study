@@ -17,10 +17,10 @@ from PyQt5.QtGui import QPalette, QPixmap, QColor
 from PyQt5.QtGui import *
 from query_request import *
 
-class Ui_MainWindow_Ex(QMainWindow, Ui_MainWindow):  # 1.继承ui_to_py 中Ui_Form类
+class Ui_MainWindow_Ex(QMainWindow, Ui_MainWindow):  # 1.继承ui_to_py 中Ui_MainWindow类
     def __init__(self):
         super().__init__()
-        self.setupUi(self)  # 2.在这里调用Ui_Form.setupUi 并且需要传入self
+        self.setupUi(self)  # 2.在这里调用Ui_MainWindow.setupUi 并且需要传入self
         self.iniUI()
 
     def iniUI(self):
