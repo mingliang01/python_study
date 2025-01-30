@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 '''
-   @ 功能：
+   @ 功能：12306查票
    @ author:Ming Liang
    @ create:
 '''
