@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import *
 
 import sys
 
-class Ui_DialogEx(QWidget, Ui_Dialog):
+class Ui_DialogEx(QDialog, Ui_Dialog):
 
     def __init__(self):
         super().__init__()
@@ -74,9 +74,3 @@ class Ui_DialogEx(QWidget, Ui_Dialog):
         file_, _ = QFileDialog.getSaveFileName(self, "文件保存", "C:/", "All Files (*);;Text Files (*.txt)")
         print(file_)
         # endregion
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    w = MyApp()
-    w.show()
-    sys.exit(app.exec())
