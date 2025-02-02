@@ -1,2 +1,3 @@
 # python_study
 明亮的个人python学习代码
+请自行下载合适的chrome测试程序和驱动
