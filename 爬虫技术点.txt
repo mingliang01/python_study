@@ -1,0 +1,30 @@
+一 工具
+Pycharm:代码编辑
+Anaconda:python第三方库合集包，装了省事
+
+二 网络请求
+主要用requests，其他还有urllib2,urllib
+Requests-cache
+Requests-html
+
+三html解析
+主要用xpath，辅助正则
+BeautifulSoup也很强
+
+四 动态网页加载
+Selenium
+Splash
+
+五 数据处理
+Pandas
+Csv
+Sqlite
+Mysql
+redis
+Mongodb
+
+六 数据抓包
+Charles
+fiddler
+
+七 scrapy框架
