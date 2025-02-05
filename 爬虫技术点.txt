@@ -6,21 +6,26 @@ Anaconda:python第三方库合集包，装了省事
 主要用requests，其他还有urllib2,urllib
 Requests-cache
 Requests-html
+爬websocket用aiowebsocket
 
 三html解析
 主要用xpath，辅助正则
 BeautifulSoup也很强
+selector
 
 四 动态网页加载
-Selenium
+1 动态渲染模拟浏览器
+Selenium+WebDriver：元素定位，控制浏览器大小，前进后退，刷新，单击，提交，响应事件，断言，元素等待，切换frame，下拉，调用JS，截图，无头模式
+结合Browsermob-Proxy代理，可以获取所有数据,还可以给他设置代理IP
 Splash
+2 使用抓包工具，抓到地址后自己请求，解密比较麻烦
 
 五 数据处理
 Pandas
 Csv
 Sqlite
 Mysql
-redis
+redis 用来当做分布式任务队列
 Mongodb
 
 六 数据抓包
@@ -28,3 +33,9 @@ Charles
 fiddler
 
 七 scrapy框架
+
+八 工具
+小米球 内网穿透
+mitmproxy 中间人代理工具 安装待定
+nginx反向代理
+postman请求调试插件，用apifox替代
