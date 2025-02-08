@@ -31,11 +31,35 @@ Mongodb
 六 数据抓包
 Charles
 fiddler
+appnium + Android SDK:移动端自动化测试工具，用于模拟人工操作进入APP获取数据,需要知道appPackage----要启动的app的包名。微信是"com.tencent.mm"
+Packet Capture 可以在安卓上抓包，常用来初步判定
+appActivity----要启动的界面。微信启动界面是".ui.LauncherUI"
+appPackage可以在腾讯应用宝中下载GT工具获取
+appActivity 可以用命令:adb logcat>d:\log.log，通过日志获取
+或者直接用工具，比如安卓修改大师获取
+最好用夜神模拟器之类的运行APP
 
-七 scrapy框架
+七 爬虫框架
+scrapy
+asyncpy 李玺自己开发的
+feapder
+scrapy-redis
+scrapy_helper 可配置的爬虫框架
+webmagicx
+portia
 
 八 工具
 小米球 内网穿透
-mitmproxy 中间人代理工具 安装待定
+mitmproxy 中间人代理工具，反爬虫，JS注入等 安装待定
 nginx反向代理
 postman请求调试插件，用apifox替代
+
+九 大规模爬取新闻网站和博客网站的文章正文。
+目前已有三种提取方法：基于文档内容的提取方法、基于DOM节点的面提取方法、基于视觉信息的提取方法
+下面介绍两个开源的智能解析库。
+1. Newspaper
+Github: https: //Github. com/codelucas/newspaper
+这是一种基于页面 html 标签 DOM 节点的正文内容提取方法。
+2. GeneralNewsExtractor
+Github:https://Github.com/codelucas/newspaper
+这是一种基于网页文本密度与符号密度对网页进行正文内容提取的方法。

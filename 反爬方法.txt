@@ -1,9 +1,11 @@
-一请求头检测
+一 请求头检测
 user-agent : 随机请求头
 
 二 登录验证
 设置cookie和session
-验证码识别：图片用tesseract的，滑动的自己计算位置用Selenium模拟拖动
+验证码识别：图片用tesseract的不行自己训练模型或者干脆花钱
+滑动拖动验证码：自己计算位置用Selenium模拟拖动：1 分析验证码在什么时候出现 2 确定滑块拖动的位置 3 用鼠标模拟拖动 4 验证是否成功
+滑动拼图验证码：找到两张图片，像素对比确定距离，再用距离模拟拖动
 
 三 封IP
 用代理池，自己扒代理或者干脆买代理或者云服务
@@ -11,7 +13,7 @@ user-agent : 随机请求头
 搭建自己的代理服务器，用ADSL，买一台可以动态拨号的VPS主机，用xshell拨号上去，在主机上面用TiniProxy或者Squid搭建代理服务器，设置一个域名指定到主机的IP。
 用nginx做反向代理
 用python模拟xshell拨号
-
+代理工具库有：proxy_pool,Pyproxy-Async,ProxyBroker
 
 四 referer校验
 记录跳转时跳转前的网址，放在头信息里面，进行校验
@@ -20,3 +22,25 @@ user-agent : 随机请求头
 五 签名校验
 传递头里面有一个sign字段会变
 需要逆向，JS逆向等
+
+六 文本混淆
+图片伪装：下载到图片后OCR，图片下载不了的话，尝试截图
+CSS偏移量：分析html找到替换规律
+编码映射：分析网页，建立映射
+字体反爬：需要下载到自定义的字体文件，用fontCreator打开woff字体文件分析，用fontTools库解析字体文件，建立映射解码
+直接OCR也许是一条路
+
+七 特征识别
+浏览器指纹:系统字体，分辨率，应急等信息，可以用工具查看，Browserprint，panopticlick，可以使用工具屏蔽自己上网的浏览器指纹，如uMatrix。
+WebDriver识别（谷歌驱动检测，selenium检测)：要修改window.navigator.webdriver字段，改成undefined。
+option.add_experimental_option('excludeSwitches', ['enable-automation'])，新版有可能无效，解决方法是使用76老版本
+或者使用代理,mitmproxy，使用它提供的api可以过滤掉JS中的检测代码，写个python放mitmproxy目录，用命令运行:mitmdump.exe -s 名字.python。然后在selenium检测使用mitmproxy代理访问网站，使用selenium模拟，再用代理截获数据
+使用网页精灵替代selenium，它直接调用浏览器内核API，可以绕过特征检测
+
+八 APK反编译
+apktool:获取资源文件，提取图片和布局文件等
+dex2jar:将apk反编译java源码(jar文件)
+jd-gui:查看apk中classes.dex转化成的jar文件，即源码文件
+
+九 阻止调试
+用JS注入干掉他的阻止代码
