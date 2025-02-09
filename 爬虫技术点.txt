@@ -1,6 +1,7 @@
 一 工具
 Pycharm:代码编辑
 Anaconda:python第三方库合集包，装了省事
+jupter notebook:
 
 二 网络请求
 主要用requests，其他还有urllib2,urllib
@@ -33,11 +34,16 @@ Charles
 fiddler
 appnium + Android SDK:移动端自动化测试工具，用于模拟人工操作进入APP获取数据,需要知道appPackage----要启动的app的包名。微信是"com.tencent.mm"
 Packet Capture 可以在安卓上抓包，常用来初步判定
+Http Cannary 安卓抓包，李玺认为好用
 appActivity----要启动的界面。微信启动界面是".ui.LauncherUI"
 appPackage可以在腾讯应用宝中下载GT工具获取
 appActivity 可以用命令:adb logcat>d:\log.log，通过日志获取
 或者直接用工具，比如安卓修改大师获取
 最好用夜神模拟器之类的运行APP
+http analyzerfull
+postern 安卓全家代理工具，将普通代理模拟为VPN代理
+Drony 安卓VPN代理工具和postern类似
+wireshark 直接抓网卡数据，绝对能抓到包，但是不好解密
 
 七 爬虫框架
 scrapy
@@ -54,6 +60,7 @@ mitmproxy 中间人代理工具，反爬虫，JS注入等 安装待定
 nginx反向代理
 postman请求调试插件，用apifox替代
 
+
 九 大规模爬取新闻网站和博客网站的文章正文。
 目前已有三种提取方法：基于文档内容的提取方法、基于DOM节点的面提取方法、基于视觉信息的提取方法
 下面介绍两个开源的智能解析库。
@@ -63,3 +70,10 @@ Github: https: //Github. com/codelucas/newspaper
 2. GeneralNewsExtractor
 Github:https://Github.com/codelucas/newspaper
 这是一种基于网页文本密度与符号密度对网页进行正文内容提取的方法。
+
+十 自动化测试工具
+Pyppeteer 可以拦截请求，定义规则
+cefPython3其它的不行了试试这个
+playwright自动录制
+airtest自动化测试框架
+auto.js手机版按键精灵

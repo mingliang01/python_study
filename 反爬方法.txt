@@ -35,7 +35,7 @@ CSS偏移量：分析html找到替换规律
 WebDriver识别（谷歌驱动检测，selenium检测)：要修改window.navigator.webdriver字段，改成undefined。
 option.add_experimental_option('excludeSwitches', ['enable-automation'])，新版有可能无效，解决方法是使用76老版本
 或者使用代理,mitmproxy，使用它提供的api可以过滤掉JS中的检测代码，写个python放mitmproxy目录，用命令运行:mitmdump.exe -s 名字.python。然后在selenium检测使用mitmproxy代理访问网站，使用selenium模拟，再用代理截获数据
-使用网页精灵替代selenium，它直接调用浏览器内核API，可以绕过特征检测
+使用网页精灵、puppeteer替代selenium，它直接调用浏览器内核API，可以绕过特征检测
 
 八 APK反编译
 apktool:获取资源文件，提取图片和布局文件等
