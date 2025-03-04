@@ -1,0 +1,132 @@
+逆向通用分析步骤
+(1)抓包，分析接口确定加密参数或者关键词。
+(2)对APK进行查壳和脱壳。
+(3)反编译 APK，提取出 Dex 文件，使用 Dex2jar 把 Dex 转换成 jar 文件，再用 Java 逆向工具得到m源码(Dex->jar->java)
+(4)分析源码，根据特征(字符串、常量、包名类名方法名、manifest文件、布局文件等方式)或其调试手段定位到关键代码。
+(5)分析代码中的变量含义类型、函数逻辑、模块流程。
+(6)通过 Hook 工具调试分析、还原加密流程或者模拟调用。
+
+工具
+android killer 反编译软件，有点老了
+jadx 可能要修改默认内存上限，jadx-gui.bat(老版本？)
+jeb 需要修改内存上限，jeb_wincon，在startjeb下面添加-Xmx9200m
+ida pro,可以调试模拟器
+mt管理器，可以当做文件管理器用，逆向的话，可以修改APK源码，比如可以修改AndroidManifest.xml文件中的版本号，绕过更新，如果在代码里面，那就找到代码，修改为最新版本。最好重新编译签名后发布。
+np管理器，可以免root,兼容性不如MT，但是免费
+
+hook工具
+xposed
+frida
+https://github.com/tcc0lin/arida 基于FastAPI实现的Frida-RPC工具，只需开发好相对应app的Frida-Js脚本，即可自动生成相应的基于FastAPI的Frida-RPC工具
+https://github.com/sensepost/objection基于frida开发的命令行工具，可以方便的hook函数和类，查看调用栈、返回值等
+https://frida.re/docs/gadget/可以免root hook,需要将so嵌入到应用，编写hook代码后重新打包APP，需要绕过签名校验
+https://github.com/hanbinglengyue/fridamanager 持久化方案1，基于gadget
+https://github.com/svengong/xcubebase 持久化方案2，基于xposed
+https://github.com/federicodotta/brida 通过python结合frida和burpsuit的图形化按钮来进行远程HOOK
+https://github.com/dqzg12300/fridauitools 界面化的整理脚本工具
+unidbg 
+magisk 只要安装了就等于root了 https://magiskcn.com/
+tai chi,可以无root运行xposed  https://github.com/taichi-dev/taichi
+
+android混淆
+包名类目和方法名的混淆最常见，一般反编译出来的源码都有这种混淆方式，把包名、类名、方法名替换成了装“a,b,c,d”或者“0oo0”这种不便阅读的名称，增加逆向的分析成本,对于这种混淆也没太好的处理方式，只要认真分析源码问题并不大。
+字符串混淆是只对源码中一些字符串变量进行混淆，Android的字符串混淆在java层或者Native层中都可以进行。比如把字符串转换成16进制，等到使用的再还原。对于使用了字符串混淆的源码，只要能找到源码中对应的解密方法，通过hook调用解密函数即可。
+花指令是只在源码中插入很多无用的或者不完整的指令，其不会改变程序的运行逻辑，但是通过一些工具反编译时会出错。因为工具反编译流程和应用的执行流程不同，会出现很多无法识别的指令。这种情况的处理方式比较费时费力，需要找到花指令的具体位置，然后一层层去解开或者替换。
+so混清之JNI函数名混淆，因为so位于Native层，需要通过JNI和才能和虚拟机中的Java层连接。虚拟机在加载so的时候会先执行JNI_0nload函数，所以混淆了JNI_0nload函数名，逆向时找不到入口函数就难以断点调试。混淆的实现方法有很多，比如让JNI_0nLoad和JNIEnv的registerNatives函数结合去实现动态的函数替换，再通过 getString 函数符号表进行隐藏，就等于混淆了JNI函数的函数名
+so混淆之 OLLVM 混淆，0LLVM 混淆在之前的Js 逆向章节中有过介绍，其在 Android 混淆的也是基本一致的。被 OLLVM 混淆后，再通过 IDA 查看流程视图会变得非常复杂。关于如何反混淆,费时的方法是在程序运行的时候把寄存器的参数打印出来，然后人工进行分析。省时的方法是直接用别人写好的工具，比如去控制流平坦化的工具 deflat 之类。
+
+android加密
+MD5 算法:MD5 加密后一般都是32位，检索词:"MD5"、digest()、MessageDigest
+AES算法:AFS 的密钥一般都是明文的16 字节，密钥长度是128bi或256bit，加密出来的数搬或 256 的整倍数。检索词:“AES""ECB""PKCS5Padding"
+RSA 算法:RSA 密钥长度是64的倍数，默认 1024。检索词:PrivateKey、PublicKey。
+DES 算法:DES密钥长度是固定的8字节，密钥需要一个初始化函数。检索词:"DES"
+Hmac 算法:检索词:hmac、"HmacSHA1"。
+还有一些通用检索词:SecretKeySpec、cipher、cipherMode、encrypt、decrypt 等。
+-小技巧-：如果这些检索词在源码中出现的非常多，并不能帮助大家快迷找到加解密位置，那可以使用frida去hook加密算法，或者使用Xposed 的插件inspeckage、算法助手apk等来协助分析,都可以快速打印出调用堆栈和秘钥、密文、明文等信息。
+
+加密参数定位方法
+1、静态分析
+巧用搜索，找加密参数的流程都是先查壳(脱壳)、反编译、查找程序的人口方法、分析程序的执行流程。
+假设已经使用Andoidkier反编译了未加壳的APP，直接使用工程搜索检索需要查找的参数名。一般是根据程序运行中出现的特征字词进行投索，然后根据AK的反馈信息进行对比，找到其效应的参数位置
+2、 动态分析
+objection是基于 Frida 的动态分析工具包，在 Frida 章节中已经介绍过。
+在通过搜索之后，如果有几个不确定的位置，则可以使用 objection，objection 就是专业的定位小能手。
+定位流程上来说也只有三步。
+(1)注入目标进程。
+objection -g com.xxx.xxx explore
+(2)跟踪类。
+android hooking watch class 'com. xxx. xxx. lx. ApiSign'
+(3)查看入参和返回值
+android hooking watch class _ method ''com. xxx, xxx, lx. ApiSign. a' --dump-args --dump-return
+然后通过参数和返回值与请求接口中的协议进行对比，就可以确定究竟是在哪一个位置了，非常简实用。
+
+3、日志注人
+日志注入是在Smali 中修改代码插人1og日志，修改后需要回编译和签名。从本质上讲，smali 代码注入是在已有的APK 或JAR 包中插人 Dalvik 虚拟机的指令，从而改变原本程序的执行。
+如果想要确定某个方法是否被调用，或者查看某参数值，可以使用Amdmoid killer 进行反编译,找到smali文件后，在函数中单击鼠标石键，选择“插人代码”，然后选择log 信息输出。
+插入日志后，需要使用 APKtools将Smali代码回编译成 APK，然后将APK 安装到移动设备中、即可司号虑拟机调试或监控工具米查看插入的日志信息，比如DDNS(Dalvik Debug Monitor Service)。
+
+4、动态调试
+动态可以更好地进行程序分析、加密定位，可以通过 Amdmod siadto 或者jeb动态调试smali,通过ida动态调试 Dex 和 so。
+
+查壳工具
+pkid
+apkscan
+
+脱壳
+1.Zjdroid
+github:https://github.com/halfkiss/ZjDroid
+原理分析:http://blog.csdn.net/jiangwei0910410003/article/details/52840602
+
+2. DexExtractor
+github:https://github.com/bunnyblue/DexExtractor
+原理分析:http://blog.csdn.net/qq1084283172/article/details/53557894
+
+3. dexdump
+https://github.com/hluwa/frida-dexdump
+github:https://github.com/smartdone/dexdump
+基于Xposed插件
+
+4.drizzleDumper
+github:https://github.com/DrizzleRisk/drizzleDumper
+原理分析:http://blog.csdn.net/qq1084283172/article/details/53563.1622
+
+5.TUnpacker(Python)
+github:https://github.com/DrizzleRisk/TUnpacker
+
+6.BUnpacker (Python)
+github:https://github.com/DrizzleRisk/BUnpacker
+
+7.FDex2 xposed脚本
+很少用了
+
+8.反射大师
+
+9.BlackDex
+只能脱壳一代
+https://github.com/codinggay/blackdex
+
+常见检测与绕过
+1、双进程保护
+app启动后，主进程已经被子进程保护，导致frida无法attach。
+需要找到fork位置，修改代码，让子进程fork失败
+或者让frida像xposed一样持久化
+2、权限检测
+美团众包、交管12123等
+app检测是否root，一般都是通过检测系统属性、安装的apk文件或者目录权限。
+需要用开源工具，ANRC、RootCloak去隐藏su，或者分析源码去hook掉检测su的方法。
+大厂有针对xposed、frida等hook工具的检测。
+可以使用未root的设备，用太极+magisk免root或者使用frida免root方式(FridaGadget)来hook
+3、调试端口检测
+检测IDA的端口23946
+需要修改工具默认端口号
+4、进程名检测
+遍历进程找到关键词
+需要修改进程名称
+5、系统函数检测
+比如检测isDebuggerConnected
+可以删除检测部分的代码，或者hook绕过
+6、执行时间检测
+通过hook修改时间差
+
+
+
