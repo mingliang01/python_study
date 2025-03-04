@@ -1,0 +1,57 @@
+1 console面板里面可以用monitorEvents函数给按钮绑监听事件，unmonitorEvents,getEventListeners
+2 条件断点里面可以加console.log输出
+3 在console面板中输出函数后，单击可以跳转到具体的代码
+4 console输出后不能复制，可以尝试：copy();JSON.stringify();Object.toString();CryptoJS.enc.Utf8.stringfy()
+5 李玺有视频案例
+6 Ajax-hook 可以hook和拦截Ajax请求
+7 request-hook，可以定位参数
+8 https://github.com/JSREI/ast-hook-for-js-RE 内存漫游，可以通过内存值定位
+9 李玺的案例：https://space.bilibili.com/390499740
+
+JS压缩混淆及对策
+webpack和obfuscator
+webpack有通用的导出JS
+aa和jj混淆，直接复制到控制台运行，或者用解码工具
+https://www.sojson.com/aaencode.html
+jsfuck 崔庆才有讲
+ollvm 用ast还原
+soJson https://www.jsjiami.com/
+lsb隐写 将关键数据隐藏到图片之类的元素中，破解方法是劫持关键函数，修改为文本输出，有隐写代码示例
+
+编码和加密
+base64 btoa atob
+md5
+sha1
+hmac(sha256)
+des
+AES 有源码
+RSA 有源码
+
+补环境
+有源码
+用JSDOM好使
+Proxy-intercept,Object-hook检测环境
+
+通过RPC来远程调用加密方法，原理，找个JS注入一个自己的函数，访问本地的地址，再用flask创建一个服务接受数据，JS替换可以用谷歌开发者工具远程调试协议注入
+
+通信协议
+webSocket 测试站点：http://coolaf.com/zh/tool/chattest
+protobuf
+
+反调试应对
+无限debugger:1 条件断点 2 禁用断点 3 修改JS 4 注入JS修改setInterval
+无法打开控制台：1 新开页面打开后切回 2 选中域名栏按F12 3 换浏览器（火狐 IE） 4 打开控制台就关闭页面，需要注入代码，在页面关闭前断点查找 5 打开就跳转，可以监听页面事件查找
+内存爆破：断点后开始调试，如果浏览器开始卡的，就暂停，查看调用栈，可以定位到位置，然后删除或者改写JS
+检测控制台的方法：1 监听F12 2 DevTools，当DIV元素被发送至控制台，浏览器会尝试获取元素ID，如果代码中在调用了console.log后又调用了getter，说明是控制台
+检测代码运行时间差
+检测toString方法有没有定义
+
+调试工具补充
+wt-js_debug
+发条js
+鬼鬼JS
+
+AST
+开源和脚本很多
+https://github.com/coder-gao
+

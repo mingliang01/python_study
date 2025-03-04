@@ -13,7 +13,7 @@ user-agent : 随机请求头
 搭建自己的代理服务器，用ADSL，买一台可以动态拨号的VPS主机，用xshell拨号上去，在主机上面用TiniProxy或者Squid搭建代理服务器，设置一个域名指定到主机的IP。
 用nginx做反向代理
 用python模拟xshell拨号
-代理工具库有：proxy_pool,Pyproxy-Async,ProxyBroker
+代理工具库有：https://github.com/jhao104/proxy_pool,https://github.com/pjialin/pyproxy-async,ProxyBroker
 
 四 referer校验
 记录跳转时跳转前的网址，放在头信息里面，进行校验
@@ -41,6 +41,18 @@ option.add_experimental_option('excludeSwitches', ['enable-automation'])，新�
 apktool:获取资源文件，提取图片和布局文件等
 dex2jar:将apk反编译java源码(jar文件)
 jd-gui:查看apk中classes.dex转化成的jar文件，即源码文件
+Android Killer集成了
+Jadx默认内存上线是4G，需要改可用内存
+JEB同样要改默认内存
+IDA
+MT管理器
+NP管理器
+
 
 九 阻止调试
 用JS注入干掉他的阻止代码
+
+十 android hook
+xposed/edxposed
+frida
+unidbg
