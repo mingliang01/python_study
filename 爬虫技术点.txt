@@ -78,3 +78,29 @@ cefPython3其它的不行了试试这个 https://github.com/cztomczak/cefpython
 playwright自动录制
 airtest自动化测试框架
 auto.js手机版按键精灵
+
+十一 抓包技巧
+1、ssl pinning
+用JustTrustMe或者sslunpining
+不想root可以用virtualXposed装上面两个模块
+如果失效，可能是app修改了请求库中检测函数名，需要查看源码，再用xposed或者frida来hook绕过验证。比如Frida-skeleton配合BurpSuite抓包
+2、ssl双向认证
+SSL 双同认证是指服务器和客户端双方都有证书校验，打开抓包工具之后，返回 No required SSl, cerifcate was sent 
+需要把客户端证书dump出来，导入到抓包工具中就成功了
+但是要反编译apk去找证书，assets或者res目录。一般证书文件用的证书名都不相同，可以检索的关键词有cient、cer、pfx、p12、PKC、bks、crt
+找到证书之后，还需要查看证书是否设置有密码。如果有密码、则需要在代码中查找密钥
+如果实在无法找到证书或者无法找到密钥，可以选择其他抓包方式
+3、不走代理
+抓包工具无数据，且开启不影响APP。
+因为系统代理不是强制对所有APP生效的，APP可以在请求时自定义代理设置
+现象：charles抓不到包，但是wireshark、httpanalyzor可以抓到包。
+可以使用postern、drony将移动设备的请求转发到抓包软件
+也可以源码处理，用frida去hook代理设置的函数
+4、协议降级
+美团系使用了移动长连接技术，使用TPC连接，这样就抓不到http包
+可以屏蔽IP，用wireshark、httpanalyzor找到服务端IP，通过防火墙屏蔽，它就会降级
+5、自定义协议
+Quic：1、通过hook修改Quic 2、使用iptables禁止掉UDP的53端口，让它降级3、使用代理转发
+spdy:阿里系在用，采用frida去hook app的spdy协议实现抓包，搜enableSpdy,搜到后用frida hook上去把za方法的overload设置为关闭状态
+https://github.com/r0ysue/r0capture 安卓应用层抓包通杀脚本
+

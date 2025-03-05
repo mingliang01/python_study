@@ -1,0 +1,7 @@
+flake8:用来检测代码是否符合pep8规范
+isort:给import自动排序,分组
+black:自动格式化代码
+pre-commit:在commit前自动配置格式化
+mypy:静态检查代码错误，无需运行
+unittest:单元测试
+pytest:开源的第三方测试框架，比unittest功能多，好处是测试代码简洁

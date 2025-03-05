@@ -3,9 +3,6 @@ user-agent : 随机请求头
 
 二 登录验证
 设置cookie和session
-验证码识别：图片用tesseract的不行自己训练模型或者干脆花钱
-滑动拖动验证码：自己计算位置用Selenium模拟拖动：1 分析验证码在什么时候出现 2 确定滑块拖动的位置 3 用鼠标模拟拖动 4 验证是否成功
-滑动拼图验证码：找到两张图片，像素对比确定距离，再用距离模拟拖动
 
 三 封IP
 用代理池，自己扒代理或者干脆买代理或者云服务
@@ -56,3 +53,40 @@ NP管理器
 xposed/edxposed
 frida
 unidbg
+
+十一验证码识别
+1、图片验证码
+tesseract:只能识别简单的
+EasyOCR和ddddorc通用识别性很高
+opencv处理后再识别
+机器学习识别，自己生成自己训练？
+深度学习识别
+https://github.com/kerlomz/captcha_trainer
+https://github.com/kerlomz/captcha_platform
+干脆花钱
+
+2、滑块验证码
+mail.qq.com
+自动化工具模拟，适合一次性登录使用，登录后获取cookie。
+滑动拖动验证码：自己计算位置用Selenium模拟拖动：1 分析验证码在什么时候出现 2 确定滑块拖动的位置 3 用鼠标模拟拖动 4 验证是否成功
+滑动拼图验证码：找到两张图片，像素对比确定距离，再用距离模拟拖动
+数美滑块验证码：www.ishumei.com/trial/captcha.html
+分析请求接口，自己构造，适合频繁访问时的验证。
+极验滑块验证码：www.geetest.com/Register
+看到的图片和抓包图片不一样，中间有处理。如果爬取频率不高，就截图把验证码保存下来，然后通过固定坐标裁剪，再识别缺口。
+如果对速度有要求，那只能还原JS。开源项目geetest-crack，geeEtacsufbo等
+可以用AI平台训练识别缺口
+ai.baidu.com/easydl
+自己收集验证图片
+
+3、点选验证码
+dun.163.com/trial/picture-click
+https://github.com/nickliqian/darknet_captcha
+https://github.com/joedidi/text_select_captcha
+
+4、短信验证码
+可以使用xposed等工具拦截短信内容，或者使用Gsm模块读取短信内容。
+https://pypi.org/project/python-gsmmodem/
+太极验证码提取器
+短信很多的话，要群控手机来处理短信。
+甚至用专业的软件和设备来实现。
