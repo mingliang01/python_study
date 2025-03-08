@@ -24,6 +24,7 @@ https://github.com/hanbinglengyue/fridamanager 持久化方案1，基于gadget
 https://github.com/svengong/xcubebase 持久化方案2，基于xposed
 https://github.com/federicodotta/brida 通过python结合frida和burpsuit的图形化按钮来进行远程HOOK
 https://github.com/dqzg12300/fridauitools 界面化的整理脚本工具
+jnitrace
 unidbg 
 magisk 只要安装了就等于root了 https://magiskcn.com/
 tai chi,可以无root运行xposed  https://github.com/taichi-dev/taichi
