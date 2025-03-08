@@ -1,0 +1,1 @@
+process=frida.get_usb_device().attach(123)
