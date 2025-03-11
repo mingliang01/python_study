@@ -10,6 +10,7 @@
 android killer 反编译软件，有点老了
 jadx 可能要修改默认内存上限，jadx-gui.bat(老版本？)
 jeb 需要修改内存上限，jeb_wincon，在startjeb下面添加-Xmx9200m
+GDA 是中国的全交互式现代反编译器
 ida pro,可以调试模拟器
 mt管理器，可以当做文件管理器用，逆向的话，可以修改APK源码，比如可以修改AndroidManifest.xml文件中的版本号，绕过更新，如果在代码里面，那就找到代码，修改为最新版本。最好重新编译签名后发布。
 np管理器，可以免root,兼容性不如MT，但是免费
@@ -17,6 +18,8 @@ np管理器，可以免root,兼容性不如MT，但是免费
 hook工具
 xposed
 frida
+frida提示，在目录下npm i @types/frida-gum
+https://github.com/oleavr/frida-agent-example 另一个提示网站
 https://github.com/tcc0lin/arida 基于FastAPI实现的Frida-RPC工具，只需开发好相对应app的Frida-Js脚本，即可自动生成相应的基于FastAPI的Frida-RPC工具
 https://github.com/sensepost/objection基于frida开发的命令行工具，可以方便的hook函数和类，查看调用栈、返回值等
 https://frida.re/docs/gadget/可以免root hook,需要将so嵌入到应用，编写hook代码后重新打包APP，需要绕过签名校验
@@ -24,6 +27,7 @@ https://github.com/hanbinglengyue/fridamanager 持久化方案1，基于gadget
 https://github.com/svengong/xcubebase 持久化方案2，基于xposed
 https://github.com/federicodotta/brida 通过python结合frida和burpsuit的图形化按钮来进行远程HOOK
 https://github.com/dqzg12300/fridauitools 界面化的整理脚本工具
+https://github.com/siyujie/okhttpLogger-frida Frida 实现拦截okhttp的脚本，可以对付混淆后的okhttp代码
 jnitrace
 unidbg 
 magisk 只要安装了就等于root了 https://magiskcn.com/
