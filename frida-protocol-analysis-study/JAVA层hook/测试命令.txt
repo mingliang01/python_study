@@ -1,0 +1,7 @@
+// 把要hook的代码放testjs，HOOK命令之需要执行一次，修改脚本实时生效
+// spawn方式hook
+frida -U -f com.xiaojianbang.app -l test.js -o fridaHook.txt
+// attach方式hook
+frida -U HookDemo -l test.js -o fridaHook.txt
+frida -U 嘟嘟牛在线 -l test.js -o fridaHook.txt
+
