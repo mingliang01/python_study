@@ -1,0 +1,2 @@
+objection -g com.xiaojianbang.app explore
+frida -U HookDemo -l test.js -o fridaHook.txt
