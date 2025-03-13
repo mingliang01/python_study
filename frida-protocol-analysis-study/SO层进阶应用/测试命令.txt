@@ -1,0 +1,7 @@
+objection -g com.xiaojianbang.app explore
+frida -U HookDemo -l test.js -o fridaHook.txt
+frida -U -f com.xiaojianbang.app -l test.js -o fridaHook.txt
+jnitrace -l * com.ximalaya.ting.android
+jnitrace -m attach -l * 喜马拉雅
+
+frida-trace -U -f com.xiaojianbang.app -m
