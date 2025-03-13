@@ -1,0 +1,2 @@
+frida -U 嘟嘟牛在线 -l test.js -o fridaHook.txt
+
