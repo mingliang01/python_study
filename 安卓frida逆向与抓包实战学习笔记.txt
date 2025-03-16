@@ -1,0 +1,45 @@
+setTimeout可以延时注入
+setImmediate可以立刻注入
+Termux是一个安卓下的APP，可以在安卓下启动linux命令行，这样就可以启动frida-server了
+如果遇到有APP启动后断开了ADB连接，可以使用frida的网络监听功能
+objection有一个LOG文件objection.log，在注入前删除，再注入就可以查看文件，适合终端显示不够的场景
+
+升级弹窗破解，用不上了，了解一下即可
+1 使用objection+wallbreaker定位关键函数，弹窗相关类有：android.App.Dialog,android.App.AlertDialog,android.widget.PopuWindow
+objection -g com.hd.zhibo explore -P ~/.objection/plugins/
+plugin wallbreaker objectsearch android.App.AlertDialog
+plugin wallbreaker objectdump XX
+objection -g com.hd.zhibo explore -s "android hooking watch class android.App.AlertDialog"
+plugin load .objection/plugins/dexdump
+2.0版本dexdump代码改了不支持插件了，用1.03
+2 用apktool解包
+3 修改smali代码，并用apktool重新打包
+4 使用jarsigner签名工具生成签名文件，并对APP进行签名
+5 如果APP加壳了，要先脱壳,dexdump可以当做objection的插件使用
+6 重新打包脱壳的APP，需要使用脱壳后的原始APP的dex替换掉原来的壳DEX
+7 由于入口点改变，因此还需要修改AndroidManifest.xml的入口类
+
+用objection hook抓包
+objection -g com.cz.babySister explore
+android hooking list classes 查找类
+退出objection后，在objection.log里面搜索 httpurlconnection 和okhttp(3)相关的类
+保存相关类名到文件，编辑成objection命令,插入android hooking watch class ,保存为command.txt
+objection -g com.cz.babySister explore -c "command.txt"
+如果崩溃，就把文件分2块hook,如果没有输出，那只有再找别的类hook
+选一个函数进行hook,android hooking watch class_method com.android.okhttp.internal.Platform.connectSocket --dump-args --dump-backtrace --dump-return
+定位到发包函数com.cz.babySister.c.a.a， android hooking watch class_method com.cz.babySister.c.a.a --dump-args --dump-backtrace --dump-return
+此方法害怕混淆,https://github.com/siyujie/okhttpLogger-frida Frida 实现拦截okhttp的脚本，可以对付混淆后的okhttp代码
+
+
+okhttp自吐
+解包app-debug.apk得到classes.dex文件
+改名为okhttp3logging.dex
+推送到/data/local/tmp
+frida -U -f com.r0ysue.okhttp3demo -l hookInteceptor.js
+清日志
+adb logcat -c
+抓日志
+adb logcat -v time > D:\Logcat\logcat.log
+frida -U -f com.r0ysue.okhttp3demo -l hookSocket.js
+修改objection源码中的agent.js文件，让android hooking watch class可以自动hook构造函数（我觉得还是自己改一下txt文件保险)
+搜watch-class for:，下面的uniqueMethods.forEach((method)改成uniqueMethods.concat("$init").forEach((method)
