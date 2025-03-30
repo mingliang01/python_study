@@ -1,0 +1,128 @@
+#虚拟机vmware17,
+#系统：Ubuntu 20.04.5 LTS（64位）
+#安装系统时，硬盘2040G，语言选英文保险
+#内存和CPU尽量多
+
+#切root
+sudo su
+
+#更新软件
+sudo apt-get update
+sudo apt-get upgrade
+
+#安装vmtool，这样可以共享主机剪贴板
+sudo apt-get install open-vm-tools open-vm-tools-desktop 
+
+‌#重启虚拟机‌
+sudo reboot # 使配置生效
+
+#安装git,并且设置用户和邮箱
+sudo apt-get install git
+git config --global user.name "xx"
+git config --global user.email "xx@xx.com"
+
+# 安装jdk1.8
+sudo apt-get install openjdk-8-jdk
+sudo apt-get install openjdk-8-jre
+# 切换Java版本，似乎不用
+sudo update-alternatives --config java # 选择切换java版本
+sudo update-alternatives --config javac # 选择切换javac版本
+
+#Ubuntu 20.04 LTS已经移除Python2，默认安装python3，但是很多时候还是会经常用到python2.7版本，这里首先单独安装python2.7，然后配置python2和python3，以达到手动切换系统默认python版
+sudo apt install python2
+# 将/usr/bin/python2优先级设置为1，将/usr/bin/python3的优先级设置为2
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2  1
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3  2
+# 选择切换Python版本
+sudo update-alternatives --config python 
+python --version # 查看Python版本
+
+# 安装所需要的软件包
+sudo apt-get install git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 libncurses5 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+
+#同步下载源码
+mkdir ~/bin
+#设置PATH，只能当前终端生效
+PATH=~/bin:$PATH
+# google repo链接：https://storage.googleapis.com/git-repo-downloads/repo
+curl https://mirrors.tuna.tsinghua.edu.cn/git/git-repo -o ~/bin/repo
+chmod a+x ~/bin/repo
+# repo 改成清华源，临时生效
+export REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/git/git-repo'
+
+#替换 REPO_URL = 'https://gerrit-googlesource.proxy.ustclug.org/git-repo'
+nano ~/bin/repo
+
+#下载所需要的代码
+mkdir ~/aosp712_r8 && cd ~/aosp712_r8
+repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest -b android-7.1.2_r8
+
+mkdir ~/aosp810_r1 && cd ~/aosp810_r1
+repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest -b android-8.1.0_r1
+
+mkdir ~/aosp1300_r7 && cd ~/aosp1300_r7
+repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest -b android-13.0.0_r7
+# 代码同步，需要一小时以上
+repo sync 
+# 要加速同步，请传递-c （当前分支）和-j threadcount标志
+repo sync -c -j8
+
+#下载对应的驱动和刷机镜像，我这访问不了，挂梯子也不行，找在国外的朋友下载吧
+#对应关系见：
+https://source.android.com/docs/setup/reference/build-numbers?hl=zh-cn
+#下载地址
+https://developers.google.com/android/
+
+n2g47o
+https://dl.google.com/dl/android/aosp/sailfish-n2g47o-factory-f2bc8024.zip?hl=zh-cn
+https://dl.google.com/dl/android/aosp/google_devices-sailfish-n2g47o-73f4549b.tgz?hl=zh-cn
+https://dl.google.com/dl/android/aosp/qcom-sailfish-n2g47o-43bf556b.tgz?hl=zh-cn
+
+OPM1.171019.011
+https://dl.google.com/dl/android/aosp/google_devices-sailfish-opm1.171019.011-f3bafc8b.tgz?hl=zh-cn
+https://dl.google.com/dl/android/aosp/qcom-sailfish-opm1.171019.011-247af472.tgz?hl=zh-cn
+https://dl.google.com/dl/android/aosp/sailfish-opm1.171019.011-factory-56d15350.zip?hl=zh-cn
+
+#解决编译错误
+echo "export LC_ALL=C" >> ~/.bashrc
+source ~/.bashrc
+
+#从/etc/java-8-openjdk/security/java.security中取消TLSv1, TLSv1.1 禁用，搜jdk.tls.disabledAlgorithms
+nano /etc/java-8-openjdk/security/java.security
+
+编译android7.0出现的错误：
+
+ninja: build stopped: subcommand failed.
+
+解决方法：
+
+nano prebuilts/sdk/tools/jack-admin
+
+1.找到如下语句：
+
+JACK_SERVER_COMMAND="java -XX:MaxJavaStackTraceDepth=-1 -Djava.io.tmpdir=$TMPDIR $JACK_SERVER_VM_ARGUMENTS -cp $LAUNCHER_JAR $LAUNCHER_NAME"
+
+2.将上述语句修改为：
+
+JACK_SERVER_COMMAND="java -XX:MaxJavaStackTraceDepth=-1 -Djava.io.tmpdir=$TMPDIR $JACK_SERVER_VM_ARGUMENTS -Xmx4096m -cp $LAUNCHER_JAR $LAUNCHER_NAME"
+
+主要是添加了-Xmx4096m参数，接下来在源码目录下执行如下命令重启jack-admin服务：
+
+$ ./prebuilts/sdk/tools/jack-admin start-server
+
+#重启服务
+./prebuilts/sdk/tools/jack-admin kill-server && ./prebuilts/sdk/tools/jack-admin start-server
+
+"${JACK_SERVER_VM_ARGUMENTS:=-Dfile.encoding=UTF-8 -XX:+TieredCompilation}"
+"${JACK_SERVER_VM_ARGUMENTS:=-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx8192m}"
+
+./jack-admin install-server jack-launcher.jar jack-server-4.11.ALPHA.jar
+
+#编译源码
+source build/envsetup.sh # . build/envsetup.sh
+# 选择目标
+lunch aosp_redfin-userdebug
+# 构建代码，需要好几个小时
+make ALLOW_MISSING_DEPENDENCIES=true WITH_DEXPREOPT=false
+
+

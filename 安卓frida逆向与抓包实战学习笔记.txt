@@ -43,3 +43,16 @@ adb logcat -v time > D:\Logcat\logcat.log
 frida -U -f com.r0ysue.okhttp3demo -l hookSocket.js
 修改objection源码中的agent.js文件，让android hooking watch class可以自动hook构造函数（我觉得还是自己改一下txt文件保险)
 搜watch-class for:，下面的uniqueMethods.forEach((method)改成uniqueMethods.concat("$init").forEach((method)
+
+websocket抓包
+测试网站：https://github.com/gotify
+
+xmpp协议
+通常使用smack框架开发
+测试网站：https://github.com/redsolution/xabber-android
+
+protobuf协议
+测试APP(要自己编译)：https://github.com/xuexiangjys/protobuf-grpc-android
+测试服务器：https://github.com/grpc/grpc-java
+编译器：https://github.com/protocolbuffers/protobuf/releases
+编译器用命令行可以解析二进制数据 protoc --decode_raw < *.bin
